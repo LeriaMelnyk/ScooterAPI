@@ -17,7 +17,6 @@ namespace ScooterDAL.Repositories
             _context = context;
         }
 
-        // Реализация методов из IGenericRepository<Vehicle>
         public async Task<IEnumerable<Vehicle>> GetAllAsync()
         {
             return await _context.Vehicles.ToListAsync();
@@ -48,8 +47,7 @@ namespace ScooterDAL.Repositories
             await _context.SaveChangesAsync();
         }
 
-        // Специфічні методи IVehicleRepository
-
+  
         public async Task<IEnumerable<Vehicle>> GetAvailableVehiclesAsync()
         {
             return await _context.Vehicles
