@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Scooter.BLL.DTO;
 using Scooter.BLL.Services.Interfaces;
+using Scooter.DAL.Pagination;
 using ScooterDAL.Entities;
 using ScooterDAL.UOW;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 
 public class TripService : ITripService
 {
@@ -58,4 +61,21 @@ public class TripService : ITripService
             await _unitOfWork.SaveAsync();
         }
     }
+
+    public async Task<PagedResult<TripDTO>> GetTripsAsync(int pageNumber, int pageSize)
+    {
+        var pagedTrips = await _unitOfWork.Trips.GetPagedAsync(pageNumber, pageSize);
+        var tripDTOs = _mapper.Map<IEnumerable<TripDTO>>(pagedTrips.Items);
+
+        return new PagedResult<TripDTO>
+        {
+            Items = tripDTOs,
+            TotalCount = pagedTrips.TotalCount,
+            PageNumber = pagedTrips.PageNumber,
+            PageSize = pagedTrips.PageSize
+        };
+    }
+
 }
+
+

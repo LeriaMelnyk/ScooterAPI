@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Scooter.DAL.Pagination;
 using ScooterDAL.Data;
 using ScooterDAL.Entities;
 using ScooterDAL.Repositories.Interfaces;
@@ -10,7 +11,6 @@ namespace ScooterDAL.Repositories
     {
         public TripRepository(ScooterDbContext context) : base(context) { }
 
-        // Всі поїздки з користувачами і транспортом
         public async Task<IEnumerable<Trip>> GetTripsWithDetailsAsync()
         {
             return await _context.Trips
@@ -19,7 +19,6 @@ namespace ScooterDAL.Repositories
                                  .ToListAsync();
         }
 
-        // Поїздки конкретного користувача
         public async Task<IEnumerable<Trip>> GetUserTripsAsync(int userId)
         {
             return await _context.Trips
@@ -27,5 +26,30 @@ namespace ScooterDAL.Repositories
                                  .Include(t => t.Vehicle)
                                  .ToListAsync();
         }
+
+        public async Task<PagedResult<Trip>> GetPagedAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Trips.AsQueryable();
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PagedResult<Trip>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+
+        public async Task<int> CountAsync()
+        {
+            return await _context.Trips.CountAsync();
+        }
+
     }
 }

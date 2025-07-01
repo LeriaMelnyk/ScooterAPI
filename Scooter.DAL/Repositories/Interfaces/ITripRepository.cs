@@ -1,4 +1,5 @@
-﻿using ScooterDAL.Entities;
+﻿using Scooter.DAL.Pagination;
+using ScooterDAL.Entities;
 
 namespace ScooterDAL.Repositories.Interfaces
 {
@@ -6,5 +7,10 @@ namespace ScooterDAL.Repositories.Interfaces
     {
         Task<IEnumerable<Trip>> GetTripsWithDetailsAsync();
         Task<IEnumerable<Trip>> GetUserTripsAsync(int userId);
+
+        // В интерфейсе ITripRepository
+        Task<PagedResult<Trip>> GetPagedAsync(int pageNumber, int pageSize);
+
+        Task<int> CountAsync();
     }
 }

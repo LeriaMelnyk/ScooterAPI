@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Scooter.BLL.DTO;
 using Scooter.BLL.Services.Interfaces;
+using Scooter.DAL.Pagination;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -73,6 +74,14 @@ namespace Scooter.API.Controllers
             await _tripService.DeleteTripAsync(id);
             return NoContent();
         }
+
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetTrips(int pageNumber = 1, int pageSize = 10)
+        {
+            var trips = await _tripService.GetTripsAsync(pageNumber, pageSize);
+            return Ok(trips);
+        }
+
     }
 
 }
