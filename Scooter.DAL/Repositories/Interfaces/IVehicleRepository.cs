@@ -6,5 +6,7 @@ namespace ScooterDAL.Repositories.Interfaces
     {
         Task<IEnumerable<Vehicle>> GetAvailableVehiclesAsync();
         Task<Vehicle?> GetByRegistrationNumberAsync(string regNumber);
+
+        Task SaveChangesAsync();
     }
 }
